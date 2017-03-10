@@ -1,0 +1,45 @@
+<idea-plugin version="2">
+    <id>com.hotswap.agent.plugin</id>
+    <name>HotSwapAgent</name>
+    <version>1.0</version>
+    <vendor email="dmitry.anatolyevich.zhuravlev@gmail.com" url="https://github.com/dmitry-zhuravlev"/>
+
+    <description><![CDATA[
+      This plugin intend to simplify usage of <a href="http://hotswapagent.org/">HotSwapAgent</a>.<br>
+    ]]></description>
+
+    <change-notes><![CDATA[
+     <h1>0.1</h1>
+      <ul>
+         <li>Initial version
+      </ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="163.12024.16"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettings"
+                                 bundle="HotSwapAgentIntellijPluginBundle"
+                                 groupId="tools"
+                                 nonDefaultProject="true"
+                                 key="settings.hotswap.plugin.name">
+        </applicationConfigurable>
+        <applicationService id="stateProvider" serviceImplementation="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider"/>
+        <postStartupActivity implementation="com.hotswap.agent.plugin.startup.HotSwapAgentPluginStartupActivity"/>
+        <projectService serviceImplementation="com.hotswap.agent.plugin.services.DownloadManager"/>
+        <java.programPatcher implementation="com.hotswap.agent.plugin.configuration.patcher.HotSwapAgentPluginConfigurationPatcher"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+</idea-plugin>
