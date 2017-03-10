@@ -2,7 +2,9 @@
     <id>com.hotswap.agent.plugin</id>
     <name>HotSwapAgent</name>
     <version>1.0</version>
-    <vendor email="dmitry.anatolyevich.zhuravlev@gmail.com" url="https://github.com/dmitry-zhuravlev"/>
+    <vendor url="https://github.com/dmitry-zhuravlev/hotswap-agent-intellij-plugin">
+        Dmitry Zhuravlev, Sergei Stepanov
+    </vendor>
 
     <description><![CDATA[
       This plugin intend to simplify usage of <a href="http://hotswapagent.org/">HotSwapAgent</a>.<br>
