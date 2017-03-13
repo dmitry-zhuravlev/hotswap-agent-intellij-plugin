@@ -16,8 +16,6 @@
 package com.hotswap.agent.plugin.settings
 
 import com.hotswap.agent.plugin.services.DownloadManager
-import com.hotswap.agent.plugin.services.getLatestAgentVersionOrDefault
-import com.hotswap.agent.plugin.services.isLatestAgentVersionExist
 import com.hotswap.agent.plugin.util.AgentPathUtil
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.Configurable
@@ -38,7 +36,8 @@ class HotSwapAgentPluginSettings(val stateProvider: HotSwapAgentPluginSettingsPr
     }
 
     var stateChanged: Boolean = false
-    var form = HotSwapAgentPluginSettingsForm()
+    val form = HotSwapAgentPluginSettingsForm()
+    val downloadManager = DownloadManager.getInstance()
 
 
     override fun isModified() = stateChanged
@@ -69,17 +68,18 @@ class HotSwapAgentPluginSettings(val stateProvider: HotSwapAgentPluginSettingsPr
             stateChanged = form.applyAgentToAllConfigurationsBox.isSelected != stateProvider.currentState.enableAgentForAllConfiguration
         }
         form.updateButton.addActionListener {
-            DownloadManager.getInstance().downloadAgentJarSynchronously(versionToDownload = getLatestAgentVersionOrDefault(), canBeCanceled = false) { downloadedAgentPath ->
-                form.agentInstallPathField.textField.text = downloadedAgentPath
+            with(downloadManager) {
+                downloadAgentJarSynchronously(versionToDownload = getLatestAgentVersionOrDefault(), canBeCanceled = false) { downloadedAgentPath ->
+                    form.agentInstallPathField.textField.text = downloadedAgentPath
+                }
             }
-
         }
         showUpdateButton()
     }
 
     private fun showUpdateButton() {
         val currentVersion = AgentPathUtil.determineAgentVersionFromPath(stateProvider.currentState.agentPath)
-        val show = currentVersion != null && File(stateProvider.currentState.agentPath).exists() && isLatestAgentVersionExist(currentVersion)
+        val show = currentVersion != null && File(stateProvider.currentState.agentPath).exists() && downloadManager.isLatestAgentVersionAvailable(currentVersion)
         if (show) {
             (form.updateButtonPanel.layout as CardLayout).show(form.updateButtonPanel, "cardWithUpdateButton")
         } else {

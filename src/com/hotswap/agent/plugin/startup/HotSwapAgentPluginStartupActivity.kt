@@ -17,13 +17,17 @@ package com.hotswap.agent.plugin.startup
 
 import com.hotswap.agent.plugin.services.DownloadManager
 import com.hotswap.agent.plugin.services.DownloadManagerException
-import com.hotswap.agent.plugin.services.getLatestAgentVersionOrDefault
+import com.hotswap.agent.plugin.services.HotSwapAgentPluginNotification
 import com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider
 import com.hotswap.agent.plugin.util.AgentPathUtil
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationListener
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import java.io.File
+import javax.swing.event.HyperlinkEvent
 
 /**
  * @author Dmitry Zhuravlev
@@ -32,29 +36,57 @@ import java.io.File
 class HotSwapAgentPluginStartupActivity(val stateProvider: HotSwapAgentPluginSettingsProvider) : StartupActivity {
     companion object {
         internal val log = Logger.getInstance(HotSwapAgentPluginStartupActivity::class.java)
+        internal const val DOWNLOAD_EVENT_DESCRIPTION = "download"
     }
 
     override fun runActivity(project: Project) {
-        downloadAgentJarIfNeeded(project)
+        checkForNewAgentVersion(project)
+        downloadLatestAgentSilentlyIfNeeded(project)
     }
 
-    private fun downloadAgentJarIfNeeded(project: Project) {
+    private fun downloadLatestAgentSilentlyIfNeeded(project: Project) = with(DownloadManager.getInstance(project)) {
         if (!File(stateProvider.currentState.agentPath).exists()) {
-            val versionToDownload = getLatestAgentVersionOrDefault()
-            val defaultAgentJarPath = AgentPathUtil.getAgentJarPath(versionToDownload)
+            val latestVersion = getLatestAgentVersionOrDefault()
+            val defaultAgentJarPath = AgentPathUtil.getAgentJarPath(latestVersion)
             if (File(defaultAgentJarPath).exists()) {
                 stateProvider.currentState.agentPath = defaultAgentJarPath
                 return
             }
-            DownloadManager.getInstance(project).let { downloadManager ->
-                try {
-                    downloadManager.downloadAgentJarAsynchronously(project, versionToDownload) { downloadedAgentPath ->
+            try {
+                downloadAgentJarAsynchronously(project, latestVersion) { downloadedAgentPath ->
+                    stateProvider.currentState.agentPath = downloadedAgentPath
+                }
+            } catch(e: DownloadManagerException) {
+                log.error("Cannot download agent jar: ", e)
+            }
+        }
+    }
+
+    private fun checkForNewAgentVersion(project: Project) = with(DownloadManager.getInstance(project)) {
+        if (File(stateProvider.currentState.agentPath).exists()) {
+            val currentVersion = AgentPathUtil.determineAgentVersionFromPath(stateProvider.currentState.agentPath) ?: return
+            val latestVersion = getLatestAgentVersionOrDefault()
+            if (latestVersion > currentVersion) {
+                showNotificationAboutNewVersion(project) {
+                    downloadAgentJarAsynchronously(project, latestVersion) { downloadedAgentPath ->
                         stateProvider.currentState.agentPath = downloadedAgentPath
                     }
-                } catch(e: DownloadManagerException) {
-                    log.error("Cannot download agent jar: ", e)
                 }
             }
         }
+    }
+
+    private fun showNotificationAboutNewVersion(project: Project, downloadAction: () -> Unit) {
+        val message = """<a href=$DOWNLOAD_EVENT_DESCRIPTION>Download and apply</a> new version of HotSwapAgent."""
+        HotSwapAgentPluginNotification.getInstance(project).showBalloon(
+                "New HotSwapAgent version available",
+                message, NotificationType.INFORMATION, object : NotificationListener.Adapter() {
+            override fun hyperlinkActivated(notification: Notification, e: HyperlinkEvent) {
+                notification.expire()
+                if (DOWNLOAD_EVENT_DESCRIPTION == e.description) {
+                    downloadAction()
+                }
+            }
+        })
     }
 }

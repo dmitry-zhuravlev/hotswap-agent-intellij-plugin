@@ -37,6 +37,7 @@
         <applicationService id="stateProvider" serviceImplementation="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider"/>
         <postStartupActivity implementation="com.hotswap.agent.plugin.startup.HotSwapAgentPluginStartupActivity"/>
         <projectService serviceImplementation="com.hotswap.agent.plugin.services.DownloadManager"/>
+        <projectService serviceImplementation="com.hotswap.agent.plugin.services.HotSwapAgentPluginNotification"/>
         <java.programPatcher implementation="com.hotswap.agent.plugin.configuration.patcher.HotSwapAgentPluginConfigurationPatcher"/>
     </extensions>
 

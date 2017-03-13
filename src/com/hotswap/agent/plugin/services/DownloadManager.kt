@@ -87,6 +87,46 @@ class DownloadManager {
         }
     }
 
+    fun isLatestAgentVersionAvailable(currentVersion: String) = getLatestAgentVersionOrDefault() > currentVersion
+
+    fun getLatestAgentVersionOrDefault(default: String = Constants.MIN_AGENT_VERSION): String {
+        try {
+            return determineLatestAgentVersionRequest().get(20, TimeUnit.SECONDS)
+        } catch(ex: Exception) {
+            return default
+        }
+    }
+
+   private fun determineLatestAgentVersionRequest(): Future<String> {
+        val callable = Callable<String> {
+            var result = Constants.MIN_AGENT_VERSION
+            try {
+                result = HttpRequests.request(Constants.RELEASE_URL)
+                        .productNameAsUserAgent().connect { request ->
+                    var version: String = Constants.MIN_AGENT_VERSION
+                    @Suppress("UNCHECKED_CAST")
+                    val reader = BufferedReader(InputStreamReader(request.inputStream))
+                    val jo = JsonParser().parse(reader) as JsonArray
+                    if (jo.size() > 0) {
+                        var versionName = jo.map { (it as JsonObject).get("name").asString }.find { !it.endsWith("SNAPSHOT") }
+                        if (versionName == null || versionName.isBlank()) {
+                            versionName = (jo.get(0) as JsonObject).get("tag_name").asString
+                        }
+                        if (versionName != null) {
+                            version = versionName
+                        }
+                    }
+                    version
+                }
+            } catch(ex: IOException) {
+                DownloadManager.log.warn(
+                        "Couldn't load the release URL: ${Constants.RELEASE_URL}")
+            }
+            result
+        }
+        return Executors.newFixedThreadPool(1).submit(callable)
+    }
+
 
     private fun doDownload(version: String, progress: ProgressIndicator?, progressText: String?): String {
         val downloadUrl = "https://github.com/HotswapProjects/HotswapAgent/releases/download/$version/hotswap-agent-$version.jar"
@@ -106,43 +146,3 @@ class DownloadManager {
 }
 
 class DownloadManagerException(e: Throwable) : Exception(e)
-
-fun determineLatestAgentVersionRequest(): Future<String> {
-    val callable = Callable<String> {
-        var result = Constants.MIN_AGENT_VERSION
-        try {
-            result = HttpRequests.request(Constants.RELEASE_URL)
-                    .productNameAsUserAgent().connect { request ->
-                var version: String = Constants.MIN_AGENT_VERSION
-                @Suppress("UNCHECKED_CAST")
-                val reader = BufferedReader(InputStreamReader(request.inputStream))
-                val jo = JsonParser().parse(reader) as JsonArray
-                if (jo.size() > 0) {
-                    var versionName = jo.map { (it as JsonObject).get("name").asString }.find { !it.endsWith("SNAPSHOT") }
-                    if (versionName == null || versionName.isBlank()) {
-                        versionName = (jo.get(0) as JsonObject).get("tag_name").asString
-                    }
-                    if (versionName != null) {
-                        version = versionName
-                    }
-                }
-                version
-            }
-        } catch(ex: IOException) {
-            DownloadManager.log.warn(
-                    "Couldn't load the release URL: ${Constants.RELEASE_URL}")
-        }
-        result
-    }
-    return Executors.newFixedThreadPool(1).submit(callable)
-}
-
-fun isLatestAgentVersionExist(currentVersion: String) = getLatestAgentVersionOrDefault().compareTo(currentVersion).let { comparision -> comparision > 0 }
-
-fun getLatestAgentVersionOrDefault(default: String = Constants.MIN_AGENT_VERSION): String {
-    try {
-        return determineLatestAgentVersionRequest().get(20, TimeUnit.SECONDS)
-    } catch(ex: Exception) {
-        return default
-    }
-}
