@@ -71,7 +71,7 @@ class DownloadManager {
     fun downloadAgentJarAsynchronously(project: Project, versionToDownload: String, onSuccess: (String) -> Unit) {
         val progressText = "Downloading HotSwapAgent $versionToDownload"
         ApplicationManager.getApplication().invokeLater {
-            val downloadTask = object : Task.Backgroundable(null, "Downloading") {
+            val downloadTask = object : Task.Backgroundable(project, "Downloading") {
                 override fun run(progress: ProgressIndicator) {
                     try {
                         onSuccess(doDownload(versionToDownload, progress, progressText))
