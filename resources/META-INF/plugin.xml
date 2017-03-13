@@ -28,12 +28,12 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable instance="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettings"
+        <projectConfigurable instance="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsConfigurable"
                                  bundle="HotSwapAgentIntellijPluginBundle"
                                  groupId="tools"
                                  nonDefaultProject="true"
                                  key="settings.hotswap.plugin.name">
-        </applicationConfigurable>
+        </projectConfigurable>
         <applicationService id="stateProvider" serviceImplementation="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider"/>
         <postStartupActivity implementation="com.hotswap.agent.plugin.startup.HotSwapAgentPluginStartupActivity"/>
         <projectService serviceImplementation="com.hotswap.agent.plugin.services.DownloadManager"/>

@@ -17,6 +17,7 @@ package com.hotswap.agent.plugin.settings;
 
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 
 import javax.swing.*;
 
@@ -30,4 +31,5 @@ public class HotSwapAgentPluginSettingsForm {
     public JBCheckBox applyAgentToAllConfigurationsBox;
     public JPanel rootPanel;
     public JPanel updateButtonPanel;
+    public JBLabel dcevmVersionLabel;
 }

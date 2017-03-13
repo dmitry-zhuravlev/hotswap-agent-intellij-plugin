@@ -17,8 +17,11 @@ package com.hotswap.agent.plugin.settings
 
 import com.hotswap.agent.plugin.services.DownloadManager
 import com.hotswap.agent.plugin.util.AgentPathUtil
+import com.hotswap.agent.plugin.util.DCEVMUtil
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.ui.DocumentAdapter
 import java.awt.CardLayout
 import java.io.File
@@ -30,15 +33,15 @@ import javax.swing.event.DocumentEvent
  * @author Dmitry Zhuravlev
  *         Date:  09.03.2017
  */
-class HotSwapAgentPluginSettings(val stateProvider: HotSwapAgentPluginSettingsProvider) : Configurable {
+class HotSwapAgentPluginSettingsConfigurable(private val stateProvider: HotSwapAgentPluginSettingsProvider, private val project: Project) : Configurable {
     companion object {
         val bundle = ResourceBundle.getBundle("HotSwapAgentIntellijPluginBundle")!!
     }
 
-    var stateChanged: Boolean = false
-    val form = HotSwapAgentPluginSettingsForm()
-    val downloadManager = DownloadManager.getInstance()
-
+    private var stateChanged: Boolean = false
+    private val form = HotSwapAgentPluginSettingsForm()
+    private val downloadManager = DownloadManager.getInstance(project)
+    private val projectRootManager = ProjectRootManager.getInstance(project)
 
     override fun isModified() = stateChanged
 
@@ -58,6 +61,9 @@ class HotSwapAgentPluginSettings(val stateProvider: HotSwapAgentPluginSettingsPr
     }
 
     private fun setupFormComponents() {
+        projectRootManager.projectSdk?.let { sdk ->
+            form.dcevmVersionLabel.text = DCEVMUtil.determineDCEVMVersion(sdk) ?: "<not determined>"
+        }
         form.agentInstallPathField.addBrowseFolderListener(null, null, null, FileChooserDescriptor(false, false, true, true, false, false))
         form.agentInstallPathField.textField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(event: DocumentEvent?) {
