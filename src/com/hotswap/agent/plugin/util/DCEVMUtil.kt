@@ -18,7 +18,6 @@ package com.hotswap.agent.plugin.util
 import com.github.dcevm.installer.ConfigurationInfo
 import com.github.dcevm.installer.Installation
 import com.intellij.openapi.projectRoots.Sdk
-import com.intellij.openapi.util.SystemInfo
 import java.nio.file.Paths
 
 /**
@@ -27,16 +26,20 @@ import java.nio.file.Paths
  */
 class DCEVMUtil {
     companion object {
+        fun isInstalledAltJvm(projectSdk: Sdk): Boolean {
+            val jdkPathString = projectSdk.homeDirectory?.path ?: return false
+            val jdkPath = Paths.get(jdkPathString) ?: return false
+            return Installation(ConfigurationInfo.current(), jdkPath).isDCEInstalledAltjvm
+        }
+
         fun determineDCEVMVersion(projectSdk: Sdk): String? {
-            val jdkPath = Paths.get(projectSdk.homeDirectory?.path) ?: return null
-            val configInfo =
-                    if (SystemInfo.isWindows) ConfigurationInfo.WINDOWS
-                    else if (SystemInfo.isLinux) ConfigurationInfo.LINUX
-                    else if (SystemInfo.isMac) ConfigurationInfo.MAC_OS
-                    else return null
-            val installation = Installation(configInfo, jdkPath)
-            return if (installation.isDCEInstalled || installation.isDCEInstalledAltjvm)
-                configInfo.getDCEVersion(jdkPath, true) //TODO add support for DCEVM installed not like altjvm
+            val jdkPathString = projectSdk.homeDirectory?.path ?: return null
+            val jdkPath = Paths.get(jdkPathString) ?: return null
+            val installation = Installation(ConfigurationInfo.current(), jdkPath)
+            return if (installation.isDCEInstalled)
+                installation.versionDcevm
+            else if (installation.isDCEInstalledAltjvm)
+                installation.versionDcevmAltjvm
             else null
         }
     }

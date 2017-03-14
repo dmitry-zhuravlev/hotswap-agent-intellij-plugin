@@ -16,11 +16,14 @@
 package com.hotswap.agent.plugin.configuration.patcher
 
 import com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider
+import com.hotswap.agent.plugin.util.DCEVMUtil
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.JavaParameters
+import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.runners.JavaProgramPatcher
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.roots.ProjectRootManager
 import java.io.File
 
 /**
@@ -35,8 +38,13 @@ class HotSwapAgentPluginConfigurationPatcher(val stateProvider: HotSwapAgentPlug
     override fun patchJavaParameters(executor: Executor?, configuration: RunProfile?, javaParameters: JavaParameters?) {
         val agentPath = stateProvider.currentState.agentPath
         if (stateProvider.currentState.enableAgentForAllConfiguration && File(agentPath).exists()) {
-            log.debug("Applying HotSwapAgent to configuration ${configuration?.name}")
-            javaParameters?.vmParametersList?.add("-XXaltjvm=dcevm")
+            val project = (configuration as? RunConfiguration)?.project ?: return
+            log.debug("Applying HotSwapAgent to configuration ${configuration?.name ?: ""}")
+            ProjectRootManager.getInstance(project).projectSdk?.let { sdk ->
+                if (DCEVMUtil.isInstalledAltJvm(sdk)) {
+                    javaParameters?.vmParametersList?.add("-XXaltjvm=dcevm")
+                }
+            }
             javaParameters?.vmParametersList?.add("-javaagent:" + agentPath)
         }
     }
