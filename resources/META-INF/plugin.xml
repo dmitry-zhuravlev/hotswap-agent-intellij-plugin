@@ -27,6 +27,8 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <depends>DevKit</depends>
+
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable instance="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsConfigurable"
                                  bundle="HotSwapAgentIntellijPluginBundle"

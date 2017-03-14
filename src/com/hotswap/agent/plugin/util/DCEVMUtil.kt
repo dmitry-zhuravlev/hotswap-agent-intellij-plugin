@@ -18,6 +18,8 @@ package com.hotswap.agent.plugin.util
 import com.github.dcevm.installer.ConfigurationInfo
 import com.github.dcevm.installer.Installation
 import com.intellij.openapi.projectRoots.Sdk
+import org.jetbrains.idea.devkit.projectRoots.IdeaJdk
+import org.jetbrains.idea.devkit.projectRoots.Sandbox
 import java.nio.file.Paths
 
 /**
@@ -27,13 +29,13 @@ import java.nio.file.Paths
 class DCEVMUtil {
     companion object {
         fun isInstalledAltJvm(projectSdk: Sdk): Boolean {
-            val jdkPathString = projectSdk.homeDirectory?.path ?: return false
+            val jdkPathString = projectSdk.javaSdk?.homePath ?: return false
             val jdkPath = Paths.get(jdkPathString) ?: return false
             return Installation(ConfigurationInfo.current(), jdkPath).isDCEInstalledAltjvm
         }
 
         fun determineDCEVMVersion(projectSdk: Sdk): String? {
-            val jdkPathString = projectSdk.homeDirectory?.path ?: return null
+            val jdkPathString = projectSdk.javaSdk?.homePath ?: return null
             val jdkPath = Paths.get(jdkPathString) ?: return null
             val installation = Installation(ConfigurationInfo.current(), jdkPath)
             return if (installation.isDCEInstalled)
@@ -42,5 +44,7 @@ class DCEVMUtil {
                 installation.versionDcevmAltjvm
             else null
         }
+
+        private val Sdk.javaSdk get() = if(sdkType is IdeaJdk) (sdkAdditionalData as? Sandbox)?.javaSdk else this
     }
 }

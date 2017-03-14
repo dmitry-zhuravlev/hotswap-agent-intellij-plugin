@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="c:/Program Files (x86)/apache-maven-3.3.9" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
   <component name="Michael.U.Bergens.CopyNixDirPlugin">
     <option name="replaceWith" value="" />
     <option name="search" value="" />
