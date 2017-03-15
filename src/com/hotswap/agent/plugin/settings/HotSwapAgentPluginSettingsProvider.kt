@@ -16,8 +16,10 @@
 package com.hotswap.agent.plugin.settings
 
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.openapi.project.Project
 
 /**
  * @author Dmitry Zhuravlev
@@ -25,9 +27,14 @@ import com.intellij.openapi.components.Storage
  */
 @State(
         name = "HotSwapAgentPluginSettingsProvider",
-        storages = arrayOf(Storage(file = "hot_swap_agent.xml"))
+        storages = arrayOf(Storage("hotswap_agent.xml"))
 )
 class HotSwapAgentPluginSettingsProvider : PersistentStateComponent<HotSwapAgentPluginSettingsProvider.State> {
+    companion object{
+        fun getInstance(project: Project): HotSwapAgentPluginSettingsProvider {
+            return ServiceManager.getService(project, HotSwapAgentPluginSettingsProvider::class.java)
+        }
+    }
     class State {
         var agentPath = ""
         var enableAgentForAllConfiguration = false

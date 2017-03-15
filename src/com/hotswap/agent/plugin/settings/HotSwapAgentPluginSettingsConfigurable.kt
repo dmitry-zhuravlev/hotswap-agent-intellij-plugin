@@ -33,7 +33,7 @@ import javax.swing.event.DocumentEvent
  * @author Dmitry Zhuravlev
  *         Date:  09.03.2017
  */
-class HotSwapAgentPluginSettingsConfigurable(private val stateProvider: HotSwapAgentPluginSettingsProvider, private val project: Project) : Configurable {
+class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
     companion object {
         val bundle = ResourceBundle.getBundle("HotSwapAgentIntellijPluginBundle")!!
     }
@@ -42,6 +42,7 @@ class HotSwapAgentPluginSettingsConfigurable(private val stateProvider: HotSwapA
     private val form = HotSwapAgentPluginSettingsForm()
     private val downloadManager = DownloadManager.getInstance(project)
     private val projectRootManager = ProjectRootManager.getInstance(project)
+    private val stateProvider = HotSwapAgentPluginSettingsProvider.getInstance(project)
 
     override fun isModified() = stateChanged
 

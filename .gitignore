@@ -5,3 +5,4 @@ out
 gen
 .idea/misc.xml
 .idea/workspace.xml
+.idea/hotswap_agent.xml

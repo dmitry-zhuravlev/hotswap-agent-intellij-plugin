@@ -33,18 +33,19 @@ import javax.swing.event.HyperlinkEvent
  * @author Dmitry Zhuravlev
  *         Date:  10.03.2017
  */
-class HotSwapAgentPluginStartupActivity(val stateProvider: HotSwapAgentPluginSettingsProvider) : StartupActivity {
+class HotSwapAgentPluginStartupActivity : StartupActivity {
     companion object {
         internal val log = Logger.getInstance(HotSwapAgentPluginStartupActivity::class.java)
         internal const val DOWNLOAD_EVENT_DESCRIPTION = "download"
     }
 
     override fun runActivity(project: Project) {
-        checkForNewAgentVersion(project)
-        downloadLatestAgentSilentlyIfNeeded(project)
+        val stateProvider = HotSwapAgentPluginSettingsProvider.getInstance(project)
+        checkForNewAgentVersion(project, stateProvider)
+        downloadLatestAgentSilentlyIfNeeded(project, stateProvider)
     }
 
-    private fun downloadLatestAgentSilentlyIfNeeded(project: Project) = with(DownloadManager.getInstance(project)) {
+    private fun downloadLatestAgentSilentlyIfNeeded(project: Project, stateProvider: HotSwapAgentPluginSettingsProvider) = with(DownloadManager.getInstance(project)) {
         if (!File(stateProvider.currentState.agentPath).exists()) {
             val latestVersion = getLatestAgentVersionOrDefault()
             val defaultAgentJarPath = AgentPathUtil.getAgentJarPath(latestVersion)
@@ -62,7 +63,7 @@ class HotSwapAgentPluginStartupActivity(val stateProvider: HotSwapAgentPluginSet
         }
     }
 
-    private fun checkForNewAgentVersion(project: Project) = with(DownloadManager.getInstance(project)) {
+    private fun checkForNewAgentVersion(project: Project, stateProvider: HotSwapAgentPluginSettingsProvider) = with(DownloadManager.getInstance(project)) {
         if (File(stateProvider.currentState.agentPath).exists()) {
             val currentVersion = AgentPathUtil.determineAgentVersionFromPath(stateProvider.currentState.agentPath) ?: return
             val latestVersion = getLatestAgentVersionOrDefault()

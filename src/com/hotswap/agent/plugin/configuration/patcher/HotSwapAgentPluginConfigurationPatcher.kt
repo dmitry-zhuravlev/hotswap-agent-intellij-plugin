@@ -30,15 +30,16 @@ import java.io.File
  * @author Dmitry Zhuravlev
  *         Date:  10.03.2017
  */
-class HotSwapAgentPluginConfigurationPatcher(val stateProvider: HotSwapAgentPluginSettingsProvider) : JavaProgramPatcher() {
+class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
     companion object {
         internal val log = Logger.getInstance(HotSwapAgentPluginConfigurationPatcher::class.java)
     }
 
     override fun patchJavaParameters(executor: Executor?, configuration: RunProfile?, javaParameters: JavaParameters?) {
+        val project = (configuration as? RunConfiguration)?.project ?: return
+        val stateProvider = HotSwapAgentPluginSettingsProvider.getInstance(project)
         val agentPath = stateProvider.currentState.agentPath
         if (stateProvider.currentState.enableAgentForAllConfiguration && File(agentPath).exists()) {
-            val project = (configuration as? RunConfiguration)?.project ?: return
             log.debug("Applying HotSwapAgent to configuration ${configuration?.name ?: ""}")
             ProjectRootManager.getInstance(project).projectSdk?.let { sdk ->
                 if (DCEVMUtil.isInstalledAltJvm(sdk)) {
