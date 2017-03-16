@@ -3,12 +3,12 @@
   <grid id="27dc6" binding="rootPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="727" height="325"/>
+      <xy x="20" y="20" width="1134" height="325"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="540a" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="540a" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -18,7 +18,7 @@
         <children>
           <grid id="67ea6" binding="updateButtonPanel" layout-manager="CardLayout" hgap="0" vgap="0" show="59d07">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -61,7 +61,7 @@
           </grid>
           <grid id="b557b" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -82,7 +82,7 @@
           </grid>
           <grid id="a3a77" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -97,6 +97,22 @@
                 <constraints border-constraint="Center"/>
                 <properties>
                   <text value="&lt;not determined&gt;"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="e5ab3" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="d7474" class="com.intellij.ui.HyperlinkLabel" binding="dcevmDownloadSuggestionLabel">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <background color="-12828863"/>
+                  <visible value="false"/>
                 </properties>
               </component>
             </children>

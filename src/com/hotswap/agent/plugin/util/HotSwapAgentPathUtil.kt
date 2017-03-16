@@ -24,7 +24,7 @@ import java.io.File
  * @author Dmitry Zhuravlev
  *         Date:  10.03.2017
  */
-class AgentPathUtil {
+class HotSwapAgentPathUtil {
     companion object {
         private const val AGENT_VERSION_PATTERN = "(\\d+.\\d+)"
         private const val AGENT_JAR_NAME_PATTERN = "(hotswap-agent-$AGENT_VERSION_PATTERN.jar)"

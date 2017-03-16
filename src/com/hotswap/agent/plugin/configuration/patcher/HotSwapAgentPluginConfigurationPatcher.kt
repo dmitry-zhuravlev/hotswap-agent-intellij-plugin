@@ -15,6 +15,7 @@
  */
 package com.hotswap.agent.plugin.configuration.patcher
 
+import com.hotswap.agent.plugin.services.HotSwapAgentPluginNotification
 import com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider
 import com.hotswap.agent.plugin.util.DCEVMUtil
 import com.intellij.execution.Executor
@@ -42,8 +43,11 @@ class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
         if (stateProvider.currentState.enableAgentForAllConfiguration && File(agentPath).exists()) {
             log.debug("Applying HotSwapAgent to configuration ${configuration?.name ?: ""}")
             ProjectRootManager.getInstance(project).projectSdk?.let { sdk ->
-                if (DCEVMUtil.isInstalledAltJvm(sdk)) {
+                if (DCEVMUtil.isDCEVMInstalledLikeAltJvm(sdk)) {
                     javaParameters?.vmParametersList?.add("-XXaltjvm=dcevm")
+                }
+                if(!DCEVMUtil.isDCEVMPresent(sdk)) {
+                    HotSwapAgentPluginNotification.getInstance(project).showNotificationAboutMissingDCEVM()
                 }
             }
             javaParameters?.vmParametersList?.add("-javaagent:" + agentPath)

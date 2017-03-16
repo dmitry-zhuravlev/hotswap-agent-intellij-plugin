@@ -16,6 +16,7 @@
 package com.hotswap.agent.plugin.settings;
 
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 
@@ -32,4 +33,15 @@ public class HotSwapAgentPluginSettingsForm {
     public JPanel rootPanel;
     public JPanel updateButtonPanel;
     public JBLabel dcevmVersionLabel;
+    public HyperlinkLabel dcevmDownloadSuggestionLabel;
+
+/*    private void createUIComponents() {
+        dcevmDownloadSuggestionLabel = new HyperlinkLabel();
+        //dcevmDownloadSuggestionLabel.setHyperlinkText(
+        //        "DCEVM installation not found for JDK specified for the current project. </br> You should ",
+        //        "download",
+        //        " it.");
+        //dcevmDownloadSuggestionLabel.setHtmlText("DCEVM installation not found for JDK specified for the current project. </br> You should <a href=\"https://github.com/dcevm/dcevm/releases\">download</a>  it.");
+        //dcevmDownloadSuggestionLabel.setHyperlinkTarget("https://github.com/dcevm/dcevm/releases");
+    }*/
 }

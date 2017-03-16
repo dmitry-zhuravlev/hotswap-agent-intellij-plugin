@@ -16,14 +16,16 @@
 package com.hotswap.agent.plugin.settings
 
 import com.hotswap.agent.plugin.services.DownloadManager
-import com.hotswap.agent.plugin.util.AgentPathUtil
+import com.hotswap.agent.plugin.util.Constants.Companion.DCEVM_RELEASES_URL
 import com.hotswap.agent.plugin.util.DCEVMUtil
+import com.hotswap.agent.plugin.util.HotSwapAgentPathUtil
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.ui.DocumentAdapter
 import java.awt.CardLayout
+import java.awt.Color
 import java.io.File
 import java.util.*
 import javax.swing.JComponent
@@ -36,6 +38,7 @@ import javax.swing.event.DocumentEvent
 class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
     companion object {
         val bundle = ResourceBundle.getBundle("HotSwapAgentIntellijPluginBundle")!!
+        private const val DCEVM_NOT_DETERMINED = "<not determined>"
     }
 
     private var stateChanged: Boolean = false
@@ -63,7 +66,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
 
     private fun setupFormComponents() {
         projectRootManager.projectSdk?.let { sdk ->
-            form.dcevmVersionLabel.text = DCEVMUtil.determineDCEVMVersion(sdk) ?: "<not determined>"
+            form.dcevmVersionLabel.text = DCEVMUtil.determineDCEVMVersion(sdk) ?: DCEVM_NOT_DETERMINED
         }
         form.agentInstallPathField.addBrowseFolderListener(null, null, null, FileChooserDescriptor(false, false, true, true, false, false))
         form.agentInstallPathField.textField.document.addDocumentListener(object : DocumentAdapter() {
@@ -81,11 +84,20 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
                 }
             }
         }
+        form.dcevmDownloadSuggestionLabel.apply{
+            setHtmlText("""
+                   DCEVM installation not found for JDK specified for the current project.
+                   You should <a>download</a> and install it.
+                   """)
+            foreground = Color.red
+            setHyperlinkTarget(DCEVM_RELEASES_URL)
+            isVisible = form.dcevmVersionLabel.text == DCEVM_NOT_DETERMINED
+        }
         showUpdateButton()
     }
 
     private fun showUpdateButton() {
-        val currentVersion = AgentPathUtil.determineAgentVersionFromPath(stateProvider.currentState.agentPath)
+        val currentVersion = HotSwapAgentPathUtil.determineAgentVersionFromPath(stateProvider.currentState.agentPath)
         val show = currentVersion != null && File(stateProvider.currentState.agentPath).exists() && downloadManager.isLatestAgentVersionAvailable(currentVersion)
         if (show) {
             (form.updateButtonPanel.layout as CardLayout).show(form.updateButtonPanel, "cardWithUpdateButton")

@@ -18,8 +18,9 @@ package com.hotswap.agent.plugin.services
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.hotswap.agent.plugin.util.AgentPathUtil
 import com.hotswap.agent.plugin.util.Constants
+import com.hotswap.agent.plugin.util.Constants.Companion.AGENT_RELEASES_API_URL
+import com.hotswap.agent.plugin.util.HotSwapAgentPathUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.diagnostic.Logger
@@ -101,7 +102,7 @@ class DownloadManager {
         val callable = Callable<String> {
             var result = Constants.MIN_AGENT_VERSION
             try {
-                result = HttpRequests.request(Constants.RELEASE_URL)
+                result = HttpRequests.request(AGENT_RELEASES_API_URL)
                         .productNameAsUserAgent().connect { request ->
                     var version: String = Constants.MIN_AGENT_VERSION
                     @Suppress("UNCHECKED_CAST")
@@ -120,7 +121,7 @@ class DownloadManager {
                 }
             } catch(ex: IOException) {
                 DownloadManager.log.warn(
-                        "Couldn't load the release URL: ${Constants.RELEASE_URL}")
+                        "Couldn't load the release URL: $AGENT_RELEASES_API_URL")
             }
             result
         }
@@ -130,7 +131,7 @@ class DownloadManager {
 
     private fun doDownload(version: String, progress: ProgressIndicator?, progressText: String?): String {
         val downloadUrl = "https://github.com/HotswapProjects/HotswapAgent/releases/download/$version/hotswap-agent-$version.jar"
-        val agentJarPath = AgentPathUtil.getAgentJarPath(version)
+        val agentJarPath = HotSwapAgentPathUtil.getAgentJarPath(version)
         val file = File(agentJarPath)
         if (progress != null && progressText != null) {
             progress.text = progressText

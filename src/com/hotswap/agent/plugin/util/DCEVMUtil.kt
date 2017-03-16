@@ -28,10 +28,17 @@ import java.nio.file.Paths
  */
 class DCEVMUtil {
     companion object {
-        fun isInstalledAltJvm(projectSdk: Sdk): Boolean {
+        fun isDCEVMInstalledLikeAltJvm(projectSdk: Sdk): Boolean {
             val jdkPathString = projectSdk.javaSdk?.homePath ?: return false
             val jdkPath = Paths.get(jdkPathString) ?: return false
             return Installation(ConfigurationInfo.current(), jdkPath).isDCEInstalledAltjvm
+        }
+
+        fun isDCEVMPresent(projectSdk: Sdk): Boolean {
+            val jdkPathString = projectSdk.javaSdk?.homePath ?: return false
+            val jdkPath = Paths.get(jdkPathString) ?: return false
+            val installation = Installation(ConfigurationInfo.current(), jdkPath)
+            return installation.isDCEInstalled || installation.isDCEInstalledAltjvm
         }
 
         fun determineDCEVMVersion(projectSdk: Sdk): String? {
