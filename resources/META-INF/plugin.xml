@@ -8,6 +8,7 @@
 
     <description><![CDATA[
       This plugin intends to simplify the usage of <a href="http://hotswapagent.org/">HotSwapAgent</a>.<br>
+      Agent provides real hotswap functionality together with <a href="https://dcevm.github.io/">DCEVM</a> which extends JVM class redefinition functionality.<br>
     ]]></description>
 
     <change-notes><![CDATA[
@@ -36,10 +37,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable instance="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsConfigurable"
-                                 bundle="HotSwapAgentIntellijPluginBundle"
-                                 groupId="tools"
-                                 nonDefaultProject="true"
-                                 key="settings.hotswap.plugin.name">
+                             bundle="HotSwapAgentIntellijPluginBundle"
+                             groupId="tools"
+                             nonDefaultProject="true"
+                             key="settings.hotswap.plugin.name">
         </projectConfigurable>
         <postStartupActivity implementation="com.hotswap.agent.plugin.startup.HotSwapAgentPluginStartupActivity"/>
         <projectService id="stateProvider" serviceImplementation="com.hotswap.agent.plugin.settings.HotSwapAgentPluginSettingsProvider"/>
