@@ -19,6 +19,7 @@ import com.hotswap.agent.plugin.services.DownloadManager
 import com.hotswap.agent.plugin.util.Constants.Companion.DCEVM_RELEASES_URL
 import com.hotswap.agent.plugin.util.DCEVMUtil
 import com.hotswap.agent.plugin.util.HotSwapAgentPathUtil
+import com.intellij.execution.RunManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
@@ -46,6 +47,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
     private val downloadManager = DownloadManager.getInstance(project)
     private val projectRootManager = ProjectRootManager.getInstance(project)
     private val stateProvider = HotSwapAgentPluginSettingsProvider.getInstance(project)
+    private val runManager = RunManager.getInstance(project)
 
     override fun isModified() = stateChanged
 
@@ -55,6 +57,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
     override fun apply() {
         stateProvider.currentState.agentPath = form.agentInstallPathField.text
         stateProvider.currentState.enableAgentForAllConfiguration = form.applyAgentToAllConfigurationsBox.isSelected
+        stateProvider.currentState.selectedRunConfigurations = form.configurationTableProvider.getSelectedConfigurationNames()
         showUpdateButton()
         stateChanged = false
     }
@@ -76,6 +79,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         })
         form.applyAgentToAllConfigurationsBox.addItemListener {
             stateChanged = form.applyAgentToAllConfigurationsBox.isSelected != stateProvider.currentState.enableAgentForAllConfiguration
+            form.configurationTableProvider.tableView.isEnabled = !form.applyAgentToAllConfigurationsBox.isSelected
         }
         form.updateButton.addActionListener {
             with(downloadManager) {
@@ -84,7 +88,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
                 }
             }
         }
-        form.dcevmDownloadSuggestionLabel.apply{
+        form.dcevmDownloadSuggestionLabel.apply {
             setHtmlText("""
                    DCEVM installation not found for JDK specified for the current project.
                    You should <a>download</a> and install it.
@@ -93,7 +97,13 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
             setHyperlinkTarget(DCEVM_RELEASES_URL)
             isVisible = form.dcevmVersionLabel.text == DCEVM_NOT_DETERMINED
         }
-        showUpdateButton()
+        form.configurationTableProvider.apply {
+            addModelChangeListener {
+                stateChanged = stateProvider.currentState.selectedRunConfigurations != form.configurationTableProvider.getSelectedConfigurationNames()
+            }
+            setItems(runManager.allConfigurationsList.toTableItems())
+            setSelected(stateProvider.currentState.selectedRunConfigurations)
+        }
     }
 
     private fun showUpdateButton() {

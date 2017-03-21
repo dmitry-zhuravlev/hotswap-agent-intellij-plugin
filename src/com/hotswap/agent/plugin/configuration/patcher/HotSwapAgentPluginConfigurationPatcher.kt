@@ -24,6 +24,7 @@ import com.intellij.execution.configurations.RunConfiguration
 import com.intellij.execution.configurations.RunProfile
 import com.intellij.execution.runners.JavaProgramPatcher
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import java.io.File
 
@@ -40,17 +41,24 @@ class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
         val project = (configuration as? RunConfiguration)?.project ?: return
         val stateProvider = HotSwapAgentPluginSettingsProvider.getInstance(project)
         val agentPath = stateProvider.currentState.agentPath
-        if (stateProvider.currentState.enableAgentForAllConfiguration && File(agentPath).exists()) {
-            log.debug("Applying HotSwapAgent to configuration ${configuration?.name ?: ""}")
-            ProjectRootManager.getInstance(project).projectSdk?.let { sdk ->
-                if (DCEVMUtil.isDCEVMInstalledLikeAltJvm(sdk)) {
-                    javaParameters?.vmParametersList?.add("-XXaltjvm=dcevm")
-                }
-                if(!DCEVMUtil.isDCEVMPresent(sdk)) {
-                    HotSwapAgentPluginNotification.getInstance(project).showNotificationAboutMissingDCEVM()
-                }
-            }
-            javaParameters?.vmParametersList?.add("-javaagent:" + agentPath)
+        if (!File(agentPath).exists()) return
+        if (stateProvider.currentState.enableAgentForAllConfiguration) {
+            applyForConfiguration(agentPath, configuration, javaParameters, project)
+        } else if (stateProvider.currentState.selectedRunConfigurations.contains(configuration?.name ?: "")) {
+            applyForConfiguration(agentPath, configuration, javaParameters, project)
         }
+    }
+
+    private fun applyForConfiguration(agentPath: String, configuration: RunProfile?, javaParameters: JavaParameters?, project: Project) {
+        log.debug("Applying HotSwapAgent to configuration ${configuration?.name ?: ""}")
+        ProjectRootManager.getInstance(project).projectSdk?.let { sdk ->
+            if (DCEVMUtil.isDCEVMInstalledLikeAltJvm(sdk)) {
+                javaParameters?.vmParametersList?.add("-XXaltjvm=dcevm")
+            }
+            if (!DCEVMUtil.isDCEVMPresent(sdk)) {
+                HotSwapAgentPluginNotification.getInstance(project).showNotificationAboutMissingDCEVM()
+            }
+        }
+        javaParameters?.vmParametersList?.add("-javaagent:" + agentPath)
     }
 }
