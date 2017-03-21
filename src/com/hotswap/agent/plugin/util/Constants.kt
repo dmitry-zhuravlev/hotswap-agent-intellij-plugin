@@ -24,5 +24,6 @@ class Constants {
         const val MIN_AGENT_VERSION = "1.0"
         const val AGENT_RELEASES_API_URL = "https://api.github.com/repos/HotswapProjects/HotswapAgent/releases"
         const val DCEVM_RELEASES_URL = "https://github.com/dcevm/dcevm/releases"
+        const val DCEVM_HOW_TO_INSTALL_URL = "https://github.com/dmitry-zhuravlev/hotswap-agent-intellij-plugin#dcevm-installation"
     }
 }

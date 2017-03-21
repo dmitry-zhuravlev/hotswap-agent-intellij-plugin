@@ -37,7 +37,7 @@ DCEVM Installation
 ![DCEVM](https://cloud.githubusercontent.com/assets/1389501/23869992/4aab27ae-0825-11e7-879d-1221cc013228.gif) |
 |3. Download [latest release of Hotswap agent jar](https://github.com/HotswapProjects/HotswapAgent/releases), unpack `hotswap-agent.jar` and put it anywhere on your disc. For example: C:\java\hotswap-agent.jar|
 |4. Installation is done!|
-|5. More info [here](http://www.hotswapagent.org/quick-start)|
+|5. More info [here](http://www.hotswapagent.org)|
 
 ### Start with `Hot`SwapAgent
 | steps: |  
