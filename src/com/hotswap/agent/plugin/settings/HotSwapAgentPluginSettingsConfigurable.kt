@@ -98,7 +98,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
             isVisible = form.dcevmVersionLabel.text == DCEVM_NOT_DETERMINED
         }
         form.dcevmHowToInstallLabel.apply {
-            setHtmlText("""<a>install it.</a>""")
+            setHtmlText("""<a>install</a> it.""")
             foreground = Color.red
             setHyperlinkTarget(DCEVM_HOW_TO_INSTALL_URL)
             isVisible = form.dcevmVersionLabel.text == DCEVM_NOT_DETERMINED
