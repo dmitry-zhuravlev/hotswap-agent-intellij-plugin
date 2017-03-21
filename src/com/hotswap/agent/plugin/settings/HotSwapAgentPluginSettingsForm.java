@@ -35,6 +35,7 @@ public class HotSwapAgentPluginSettingsForm {
     public JPanel updateButtonPanel;
     public JBLabel dcevmVersionLabel;
     public HyperlinkLabel dcevmDownloadSuggestionLabel;
+    public HyperlinkLabel dcevmHowToInstallLabel;
     public HotSwapAgentEnabledConfigurationTableViewProvider configurationTableProvider;
 
     private TableView configurationsTableView;

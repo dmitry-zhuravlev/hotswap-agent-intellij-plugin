@@ -16,6 +16,7 @@
 package com.hotswap.agent.plugin.settings
 
 import com.hotswap.agent.plugin.services.DownloadManager
+import com.hotswap.agent.plugin.util.Constants.Companion.DCEVM_HOW_TO_INSTALL_URL
 import com.hotswap.agent.plugin.util.Constants.Companion.DCEVM_RELEASES_URL
 import com.hotswap.agent.plugin.util.DCEVMUtil
 import com.hotswap.agent.plugin.util.HotSwapAgentPathUtil
@@ -91,10 +92,15 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         form.dcevmDownloadSuggestionLabel.apply {
             setHtmlText("""
                    DCEVM installation not found for JDK specified for the current project.
-                   You should <a>download</a> and install it.
-                   """)
+                   You should <a>download</a> and""")
             foreground = Color.red
             setHyperlinkTarget(DCEVM_RELEASES_URL)
+            isVisible = form.dcevmVersionLabel.text == DCEVM_NOT_DETERMINED
+        }
+        form.dcevmHowToInstallLabel.apply {
+            setHtmlText("""<a>install it.</a>""")
+            foreground = Color.red
+            setHyperlinkTarget(DCEVM_HOW_TO_INSTALL_URL)
             isVisible = form.dcevmVersionLabel.text == DCEVM_NOT_DETERMINED
         }
         form.configurationTableProvider.apply {
