@@ -38,7 +38,7 @@ class HotSwapAgentPluginSettingsProvider : PersistentStateComponent<HotSwapAgent
     class State {
         var agentPath = ""
         var enableAgentForAllConfiguration = false
-        var selectedRunConfigurations = emptySet<String>()
+        var selectedRunConfigurations = mutableSetOf<String>()
     }
 
     var currentState = State()

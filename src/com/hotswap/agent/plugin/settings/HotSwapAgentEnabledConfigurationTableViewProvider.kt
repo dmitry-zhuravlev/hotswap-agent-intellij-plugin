@@ -60,7 +60,7 @@ class HotSwapAgentEnabledConfigurationTableViewProvider {
 
     fun setSelected(configNames: Set<String>) = configurationsModel.items.forEach { if (configNames.contains(it.name)) it.selected = true }
 
-    fun getSelectedConfigurationNames() = configurationsModel.items.filter { it.selected }.map { it.name}.toSet()
+    fun getSelectedConfigurationNames() = configurationsModel.items.filter { it.selected }.map { it.name}.toMutableSet()
 
     fun addModelChangeListener(listener: (TableModelEvent) -> Unit) = configurationsModel.addTableModelListener(listener)
 
