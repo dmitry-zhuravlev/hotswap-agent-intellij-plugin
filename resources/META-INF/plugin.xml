@@ -1,7 +1,7 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>com.hotswap.agent.plugin</id>
     <name>HotSwapAgent</name>
-    <version>1.1</version>
+    <version>1.2</version>
     <vendor url="https://github.com/dmitry-zhuravlev/hotswap-agent-intellij-plugin">
         Dmitry Zhuravlev, Sergei Stepanov
     </vendor>
@@ -12,7 +12,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
-     <h1>1.1</h1>
+     <h1>1.2</h1>
+      <ul>
+         <li>Added ability to choose desired configurations with HotSwapAgent enabled
+      </ul>
+      <h1>1.1</h1>
       <ul>
          <li>DCEVM installation detection, notifications about missing DCEVM installation
          <li>fix: plugin settings now per-project level
