@@ -39,26 +39,26 @@ DCEVM Installation
 |4. Installation is done!|
 |5. More info [here](http://www.hotswapagent.org)|
 
-### Start with `Hot`SwapAgent
+### Start with `Hot`SwapAgent plugin for IntelliJ IDEA.
 | steps: |  
 | ----- | 
-|1. Install HotSwapAgent plugin for IntelliJ IDEA.
-![plugin](https://cloud.githubusercontent.com/assets/1389501/23871083/4102724e-0829-11e7-93d0-de5f776b31ca.png)|
-|2. Enable HotSwapAgent plugin for all configurations.
-![enable](https://cloud.githubusercontent.com/assets/1389501/23871159/85dce804-0829-11e7-9ed1-d5986f347b9e.png)|
+|1. Install HotSwapAgent [plugin](https://plugins.jetbrains.com/plugin/9552-hotswapagent) for IntelliJ IDEA.
+![plugin](https://cloud.githubusercontent.com/assets/1389501/24604200/29589bfa-1864-11e7-9dd3-266e08401f24.png)|
+|2. Enable HotSwapAgent plugin for all configurations (or one by one).
+![enable](https://cloud.githubusercontent.com/assets/1389501/24604139/ed4eba0e-1863-11e7-8dd4-a6b81eb86fb9.png)|
 |3. You will see HOTSWAP AGENT notification in your console in case if setup was correctly done.
-![image](https://cloud.githubusercontent.com/assets/1389501/23871016/fbf746d4-0828-11e7-955f-6410d5cced10.png)|
+![notnotification](https://cloud.githubusercontent.com/assets/1389501/24604444/150f084a-1865-11e7-876b-5615c73bc989.png)|
 |4. Be sure that you have `"Reload classes after compilation: Always"` ON in IntelliJ IDEA in HotSwap section in your IDEA preferences.
 ![image](https://cloud.githubusercontent.com/assets/1389501/23870558/12ddd752-0827-11e7-9689-2015c38ebaea.png)|
-|5. To re-deploying changed classes in IDEA press keys combination `Command+Shift+F9`|
+|5. To re-deploying changed classes in IDEA press keys combination (: `Command+Shift+F9`/ ⊞: `Ctrl+Shift+F9`)|
 
 ### Happy:heart: `Hot` Swapping!
-| 1. `change` method name & then press `Command+Shift+F9`| 2. `add new` method & then press `Command+Shift+F9` |
-| -------- | :------- |
-| ![dcevm-hotswap_ok](https://cloud.githubusercontent.com/assets/1389501/23869988/4979098c-0825-11e7-88d2-7ef853ba4110.gif)   | ![dcevm-hotswap_add_ok](https://cloud.githubusercontent.com/assets/1389501/23869987/48797756-0825-11e7-93a6-3691d336a281.gif)    |
+||  
+| ----- |
+|1. `change` method name & then press (: `Command+Shift+F9`/ ⊞: `Ctrl+Shift+F9`)
+![change_01](https://cloud.githubusercontent.com/assets/1389501/24606429/56005bc6-186d-11e7-8793-a5ccc7e1b486.gif)|   
+|2. `add new` method & then press (: `Command+Shift+F9`/ ⊞: `Ctrl+Shift+F9`)
+![change_02](https://cloud.githubusercontent.com/assets/1389501/24606440/5d8d64ec-186d-11e7-970c-f32a1088886b.gif)|
+
 
 ### More info: [DCEVM](https://dcevm.github.io/) & [HotswapAgent](http://www.hotswapagent.org/)
-
-### RoadMap:
-
-1. Automate DCEVM installation process inside plugin itself.
