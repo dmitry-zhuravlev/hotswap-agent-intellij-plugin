@@ -1,5 +1,6 @@
 HotSwapAgent-IntelliJ-IDEA-plugin
 =================================
+![hotswaplogo](https://cloud.githubusercontent.com/assets/1389501/24660351/9682293a-194f-11e7-8b1a-2e193d0b1202.png)
  
 `Hot`Swapping
 ===========
