@@ -84,7 +84,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         }
         form.updateButton.addActionListener {
             with(downloadManager) {
-                downloadAgentJarSynchronously(versionToDownload = getLatestAgentVersionOrDefault(), canBeCanceled = false) { downloadedAgentPath ->
+                downloadAgentJarSynchronously(artifactToDownload = getLatestAgentDescriptorOrDefault(), canBeCanceled = false) { downloadedAgentPath ->
                     form.agentInstallPathField.textField.text = downloadedAgentPath
                 }
             }

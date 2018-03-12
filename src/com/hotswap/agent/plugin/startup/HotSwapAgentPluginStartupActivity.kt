@@ -42,14 +42,14 @@ class HotSwapAgentPluginStartupActivity : StartupActivity {
 
     private fun downloadLatestAgentSilentlyIfNeeded(project: Project, stateProvider: HotSwapAgentPluginSettingsProvider) = with(DownloadManager.getInstance(project)) {
         if (!File(stateProvider.currentState.agentPath).exists()) {
-            val latestVersion = getLatestAgentVersionOrDefault()
-            val defaultAgentJarPath = HotSwapAgentPathUtil.getAgentJarPath(latestVersion)
+            val latestArtifact = getLatestAgentDescriptorOrDefault()
+            val defaultAgentJarPath = HotSwapAgentPathUtil.getAgentJarPath(latestArtifact.version)
             if (File(defaultAgentJarPath).exists()) {
                 stateProvider.currentState.agentPath = defaultAgentJarPath
                 return
             }
             try {
-                downloadAgentJarAsynchronously(project, latestVersion) { downloadedAgentPath ->
+                downloadAgentJarAsynchronously(project, latestArtifact) { downloadedAgentPath ->
                     stateProvider.currentState.agentPath = downloadedAgentPath
                 }
             } catch(e: DownloadManagerException) {
@@ -61,10 +61,10 @@ class HotSwapAgentPluginStartupActivity : StartupActivity {
     private fun checkForNewAgentVersion(project: Project, stateProvider: HotSwapAgentPluginSettingsProvider) = with(DownloadManager.getInstance(project)) {
         if (File(stateProvider.currentState.agentPath).exists()) {
             val currentVersion = HotSwapAgentPathUtil.determineAgentVersionFromPath(stateProvider.currentState.agentPath) ?: return
-            val latestVersion = getLatestAgentVersionOrDefault()
-            if (latestVersion > currentVersion) {
+            val latestArtifact = getLatestAgentDescriptorOrDefault()
+            if (latestArtifact.version > currentVersion) {
                 HotSwapAgentPluginNotification.getInstance(project).showNotificationAboutNewAgentVersion {
-                    downloadAgentJarAsynchronously(project, latestVersion) { downloadedAgentPath ->
+                    downloadAgentJarAsynchronously(project, latestArtifact) { downloadedAgentPath ->
                         stateProvider.currentState.agentPath = downloadedAgentPath
                     }
                 }

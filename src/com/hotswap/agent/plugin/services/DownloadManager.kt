@@ -54,13 +54,13 @@ class DownloadManager {
         }
     }
 
-    fun downloadAgentJarSynchronously(project: Project? = ProjectManager.getInstance().defaultProject, versionToDownload: String, canBeCanceled: Boolean, onSuccess: (String) -> Unit) {
-        val progressText = "Downloading HotSwapAgent $versionToDownload"
+    fun downloadAgentJarSynchronously(project: Project? = ProjectManager.getInstance().defaultProject, artifactToDownload: ArtifactDescriptor, canBeCanceled: Boolean, onSuccess: (String) -> Unit) {
+        val progressText = "Downloading HotSwapAgent $artifactToDownload"
         ProgressManager.getInstance().run(
                 object : Task.Modal(project, "Downloading", canBeCanceled) {
                     override fun run(progress: ProgressIndicator) {
                         try {
-                            onSuccess(doDownload(versionToDownload, progress, progressText))
+                            onSuccess(doDownload(artifactToDownload, progress, progressText))
                         } catch(e: IOException) {
                             throw DownloadManagerException(e)
                         }
@@ -69,13 +69,13 @@ class DownloadManager {
         )
     }
 
-    fun downloadAgentJarAsynchronously(project: Project, versionToDownload: String, onSuccess: (String) -> Unit) {
-        val progressText = "Downloading HotSwapAgent $versionToDownload"
+    fun downloadAgentJarAsynchronously(project: Project, artifactToDownload: ArtifactDescriptor, onSuccess: (String) -> Unit) {
+        val progressText = "Downloading HotSwapAgent ${artifactToDownload.version}"
         ApplicationManager.getApplication().invokeLater {
             val downloadTask = object : Task.Backgroundable(project, "Downloading") {
                 override fun run(progress: ProgressIndicator) {
                     try {
-                        onSuccess(doDownload(versionToDownload, progress, progressText))
+                        onSuccess(doDownload(artifactToDownload, progress, progressText))
                     } catch(e: IOException) {
                         throw DownloadManagerException(e)
                     }
@@ -88,36 +88,38 @@ class DownloadManager {
         }
     }
 
-    fun isLatestAgentVersionAvailable(currentVersion: String) = getLatestAgentVersionOrDefault() > currentVersion
+    fun isLatestAgentVersionAvailable(currentVersion: String) = getLatestAgentDescriptorOrDefault().version > currentVersion
 
-    fun getLatestAgentVersionOrDefault(default: String = Constants.MIN_AGENT_VERSION): String {
-        try {
-            return determineLatestAgentVersionRequest().get(20, TimeUnit.SECONDS)
+    fun getLatestAgentDescriptorOrDefault(default: ArtifactDescriptor = ArtifactDescriptor(Constants.MIN_AGENT_VERSION, Constants.MIN_AGENT_VERSION)): ArtifactDescriptor {
+        return try {
+            determineLatestAgentVersionRequest().get(20, TimeUnit.SECONDS)
         } catch(ex: Exception) {
-            return default
+            default
         }
     }
 
-   private fun determineLatestAgentVersionRequest(): Future<String> {
-        val callable = Callable<String> {
-            var result = Constants.MIN_AGENT_VERSION
+   private fun determineLatestAgentVersionRequest(): Future<ArtifactDescriptor> {
+        val callable = Callable<ArtifactDescriptor> {
+            var result = ArtifactDescriptor(Constants.MIN_AGENT_VERSION, Constants.MIN_AGENT_VERSION)
             try {
                 result = HttpRequests.request(AGENT_RELEASES_API_URL)
                         .productNameAsUserAgent().connect { request ->
                     var version: String = Constants.MIN_AGENT_VERSION
+                    var tagName: String = Constants.MIN_AGENT_VERSION
                     @Suppress("UNCHECKED_CAST")
                     val reader = BufferedReader(InputStreamReader(request.inputStream))
                     val jo = JsonParser().parse(reader) as JsonArray
                     if (jo.size() > 0) {
                         var versionName = jo.map { (it as JsonObject).get("name").asString }.find { !it.endsWith("SNAPSHOT") }
+                        tagName = (jo.get(0) as JsonObject).get("tag_name").asString
                         if (versionName == null || versionName.isBlank()) {
-                            versionName = (jo.get(0) as JsonObject).get("tag_name").asString
+                            versionName = tagName
                         }
                         if (versionName != null) {
                             version = versionName
                         }
                     }
-                    version
+                    ArtifactDescriptor(tagName, version)
                 }
             } catch(ex: IOException) {
                 DownloadManager.log.warn(
@@ -129,9 +131,9 @@ class DownloadManager {
     }
 
 
-    private fun doDownload(version: String, progress: ProgressIndicator?, progressText: String?): String {
-        val downloadUrl = "https://github.com/HotswapProjects/HotswapAgent/releases/download/$version/hotswap-agent-$version.jar"
-        val agentJarPath = HotSwapAgentPathUtil.getAgentJarPath(version)
+    private fun doDownload(artifactDescriptor: ArtifactDescriptor, progress: ProgressIndicator?, progressText: String?): String {
+        val downloadUrl = with(artifactDescriptor) { "https://github.com/HotswapProjects/HotswapAgent/releases/download/$tagName/hotswap-agent-$version.jar" }
+        val agentJarPath = HotSwapAgentPathUtil.getAgentJarPath(artifactDescriptor.version)
         val file = File(agentJarPath)
         if (progress != null && progressText != null) {
             progress.text = progressText
@@ -145,5 +147,7 @@ class DownloadManager {
         return agentJarPath
     }
 }
+
+class ArtifactDescriptor(val tagName:String, val version: String)
 
 class DownloadManagerException(e: Throwable) : Exception(e)
