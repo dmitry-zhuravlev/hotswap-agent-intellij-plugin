@@ -15,11 +15,11 @@
  */
 package com.hotswap.agent.plugin.services
 
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.hotswap.agent.plugin.util.Constants
-import com.hotswap.agent.plugin.util.Constants.Companion.AGENT_RELEASES_API_URL
+import com.hotswap.agent.plugin.util.Constants.Companion.AGENT_DOWNLOAD_URL
+import com.hotswap.agent.plugin.util.Constants.Companion.AGENT_LATEST_RELEASE_API_URL
 import com.hotswap.agent.plugin.util.HotSwapAgentPathUtil
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
@@ -98,32 +98,29 @@ class DownloadManager {
         }
     }
 
-   private fun determineLatestAgentVersionRequest(): Future<ArtifactDescriptor> {
+    private fun determineLatestAgentVersionRequest(): Future<ArtifactDescriptor> {
         val callable = Callable<ArtifactDescriptor> {
             var result = ArtifactDescriptor(Constants.MIN_AGENT_VERSION, Constants.MIN_AGENT_VERSION)
             try {
-                result = HttpRequests.request(AGENT_RELEASES_API_URL)
+                result = HttpRequests.request(AGENT_LATEST_RELEASE_API_URL)
                         .productNameAsUserAgent().connect { request ->
-                    var version: String = Constants.MIN_AGENT_VERSION
-                    var tagName: String = Constants.MIN_AGENT_VERSION
-                    @Suppress("UNCHECKED_CAST")
-                    val reader = BufferedReader(InputStreamReader(request.inputStream))
-                    val jo = JsonParser().parse(reader) as JsonArray
-                    if (jo.size() > 0) {
-                        var versionName = jo.map { (it as JsonObject).get("name").asString }.find { !it.endsWith("SNAPSHOT") }
-                        tagName = (jo.get(0) as JsonObject).get("tag_name").asString
-                        if (versionName == null || versionName.isBlank()) {
-                            versionName = tagName
+                            var version: String = Constants.MIN_AGENT_VERSION
+                            @Suppress("UNCHECKED_CAST")
+                            val reader = BufferedReader(InputStreamReader(request.inputStream))
+                            val jo = JsonParser().parse(reader) as JsonObject
+                            val versionName = jo["name"]?.asString
+                            val tagName = jo["tag_name"]?.asString ?: Constants.MIN_AGENT_VERSION
+
+                            when {
+                                versionName.isNullOrBlank() -> version = tagName
+                                versionName != null -> version = versionName
+
+                            }
+                            ArtifactDescriptor(tagName, version)
                         }
-                        if (versionName != null) {
-                            version = versionName
-                        }
-                    }
-                    ArtifactDescriptor(tagName, version)
-                }
-            } catch(ex: IOException) {
+            } catch (ex: IOException) {
                 DownloadManager.log.warn(
-                        "Couldn't load the release URL: $AGENT_RELEASES_API_URL")
+                        "Couldn't load the release URL: $AGENT_LATEST_RELEASE_API_URL")
             }
             result
         }
@@ -132,7 +129,7 @@ class DownloadManager {
 
 
     private fun doDownload(artifactDescriptor: ArtifactDescriptor, progress: ProgressIndicator?, progressText: String?): String {
-        val downloadUrl = with(artifactDescriptor) { "https://github.com/HotswapProjects/HotswapAgent/releases/download/$tagName/hotswap-agent-$version.jar" }
+        val downloadUrl = with(artifactDescriptor) { "$AGENT_DOWNLOAD_URL/$tagName/hotswap-agent-$version.jar" }
         val agentJarPath = HotSwapAgentPathUtil.getAgentJarPath(artifactDescriptor.version)
         val file = File(agentJarPath)
         if (progress != null && progressText != null) {

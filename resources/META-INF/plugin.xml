@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.hotswap.agent.plugin</id>
     <name>HotSwapAgent</name>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <vendor url="https://github.com/dmitry-zhuravlev/hotswap-agent-intellij-plugin">
         Dmitry Zhuravlev, Sergei Stepanov
     </vendor>
@@ -12,7 +12,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-     <h1>1.2.1</h1>
+     <h1>1.2.2</h1>
       <ul>
          <li> Improve downloading of a new agent version.
       </ul>
