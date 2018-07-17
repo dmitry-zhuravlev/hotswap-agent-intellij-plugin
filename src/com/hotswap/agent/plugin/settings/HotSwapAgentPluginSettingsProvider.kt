@@ -27,7 +27,7 @@ import com.intellij.openapi.project.Project
  */
 @State(
         name = "HotSwapAgentPluginSettingsProvider",
-        storages = arrayOf(Storage("hotswap_agent.xml"))
+        storages = [(Storage("hotswap_agent.xml"))]
 )
 class HotSwapAgentPluginSettingsProvider : PersistentStateComponent<HotSwapAgentPluginSettingsProvider.State> {
     companion object{
@@ -45,11 +45,9 @@ class HotSwapAgentPluginSettingsProvider : PersistentStateComponent<HotSwapAgent
 
     override fun getState() = currentState
 
-    override fun loadState(state: State?) {
-        if (state != null) {
-            currentState.agentPath = state.agentPath
-            currentState.enableAgentForAllConfiguration = state.enableAgentForAllConfiguration
-            currentState.selectedRunConfigurations = state.selectedRunConfigurations
-        }
+    override fun loadState(state: State) {
+        currentState.agentPath = state.agentPath
+        currentState.enableAgentForAllConfiguration = state.enableAgentForAllConfiguration
+        currentState.selectedRunConfigurations = state.selectedRunConfigurations
     }
 }

@@ -44,7 +44,7 @@ class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
         if (!File(agentPath).exists()) return
         if (stateProvider.currentState.enableAgentForAllConfiguration) {
             applyForConfiguration(agentPath, configuration, javaParameters, project)
-        } else if (stateProvider.currentState.selectedRunConfigurations.contains(configuration?.name ?: "")) {
+        } else if (stateProvider.currentState.selectedRunConfigurations.contains(configuration.name ?: "")) {
             applyForConfiguration(agentPath, configuration, javaParameters, project)
         }
     }
@@ -59,6 +59,6 @@ class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
                 HotSwapAgentPluginNotification.getInstance(project).showNotificationAboutMissingDCEVM()
             }
         }
-        javaParameters?.vmParametersList?.add("-javaagent:" + agentPath)
+        javaParameters?.vmParametersList?.add("-javaagent:$agentPath")
     }
 }

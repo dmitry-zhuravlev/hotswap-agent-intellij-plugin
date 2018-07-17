@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.hotswap.agent.plugin</id>
     <name>HotSwapAgent</name>
-    <version>1.2.2</version>
+    <version>1.2.3</version>
     <vendor url="https://github.com/dmitry-zhuravlev/hotswap-agent-intellij-plugin">
         Dmitry Zhuravlev, Sergei Stepanov
     </vendor>
@@ -12,6 +12,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+     <h1>1.2.3</h1>
+      <ul>
+         <li> Rebuild plugin with Kotlin 1.2.
+         <li> Set the latest compatible IDEA build to 181.5281.24.
+      </ul>
      <h1>1.2.2</h1>
       <ul>
          <li> Improve downloading of a new agent version.
@@ -33,7 +38,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="163.12024.16"/>
+    <idea-version since-build="181.5281.24"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

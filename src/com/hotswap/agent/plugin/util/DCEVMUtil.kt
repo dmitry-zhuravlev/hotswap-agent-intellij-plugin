@@ -45,11 +45,11 @@ class DCEVMUtil {
             val jdkPathString = projectSdk.javaSdk?.homePath ?: return null
             val jdkPath = Paths.get(jdkPathString) ?: return null
             val installation = Installation(ConfigurationInfo.current(), jdkPath)
-            return if (installation.isDCEInstalled)
-                installation.versionDcevm
-            else if (installation.isDCEInstalledAltjvm)
-                installation.versionDcevmAltjvm
-            else null
+            return when {
+                installation.isDCEInstalled -> installation.versionDcevm
+                installation.isDCEInstalledAltjvm -> installation.versionDcevmAltjvm
+                else -> null
+            }
         }
 
         private val Sdk.javaSdk get() = if(sdkType is IdeaJdk) (sdkAdditionalData as? Sandbox)?.javaSdk else this

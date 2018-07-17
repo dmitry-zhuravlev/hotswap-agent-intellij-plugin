@@ -29,7 +29,7 @@ import javax.swing.event.HyperlinkEvent
  * @author Dmitry Zhuravlev
  *         Date:  10.03.2017
  */
-class HotSwapAgentPluginNotification(val project: Project?) {
+class HotSwapAgentPluginNotification(private val project: Project?) {
     companion object {
         private val NOTIFICATION_GROUP = NotificationGroup.balloonGroup("HotSwapAgent Notification Group")
 
