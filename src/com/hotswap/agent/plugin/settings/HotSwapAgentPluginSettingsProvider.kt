@@ -39,6 +39,7 @@ class HotSwapAgentPluginSettingsProvider : PersistentStateComponent<HotSwapAgent
         var agentPath = ""
         var enableAgentForAllConfiguration = false
         var selectedRunConfigurations = mutableSetOf<String>()
+        var disabledPlugins = mutableSetOf<String>()
     }
 
     var currentState = State()
@@ -49,5 +50,6 @@ class HotSwapAgentPluginSettingsProvider : PersistentStateComponent<HotSwapAgent
         currentState.agentPath = state.agentPath
         currentState.enableAgentForAllConfiguration = state.enableAgentForAllConfiguration
         currentState.selectedRunConfigurations = state.selectedRunConfigurations
+        currentState.disabledPlugins = state.disabledPlugins
     }
 }

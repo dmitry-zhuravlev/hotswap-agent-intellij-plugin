@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="540a" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="540a" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -103,7 +103,7 @@
           </grid>
           <grid id="e5ab3" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -118,6 +118,27 @@
               <component id="bb85c" class="com.intellij.ui.HyperlinkLabel" binding="dcevmHowToInstallLabel">
                 <constraints border-constraint="Center"/>
                 <properties/>
+              </component>
+            </children>
+          </grid>
+          <grid id="c2120" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="e6d0f" class="com.intellij.ui.components.JBLabel">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <text value="Disabled plugins:"/>
+                </properties>
+              </component>
+              <component id="1e918" class="javax.swing.JTextField" binding="disabledPluginsField" custom-create="true">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <toolTipText value="Semicolon separated list of disabled plugins"/>
+                </properties>
               </component>
             </children>
           </grid>

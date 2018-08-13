@@ -19,7 +19,9 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.HyperlinkLabel;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.fields.ExpandableTextField;
 import com.intellij.ui.table.TableView;
+import com.intellij.util.execution.ParametersListUtil;
 
 import javax.swing.*;
 
@@ -39,9 +41,11 @@ public class HotSwapAgentPluginSettingsForm {
     public HotSwapAgentEnabledConfigurationTableViewProvider configurationTableProvider;
 
     private TableView configurationsTableView;
+    public JTextField disabledPluginsField;
 
     private void createUIComponents() {
         configurationTableProvider = new HotSwapAgentEnabledConfigurationTableViewProvider();
         configurationsTableView = configurationTableProvider.getTableView();
+        disabledPluginsField = new ExpandableTextField(ParametersListUtil.COLON_LINE_PARSER, ParametersListUtil.COLON_LINE_JOINER);
     }
 }

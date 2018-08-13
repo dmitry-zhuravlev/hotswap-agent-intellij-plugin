@@ -41,15 +41,16 @@ class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
         val project = (configuration as? RunConfiguration)?.project ?: return
         val stateProvider = HotSwapAgentPluginSettingsProvider.getInstance(project)
         val agentPath = stateProvider.currentState.agentPath
+        val disablePluginsParam = stateProvider.currentState.disabledPlugins.toDisabledPluginsParam()
         if (!File(agentPath).exists()) return
         if (stateProvider.currentState.enableAgentForAllConfiguration) {
-            applyForConfiguration(agentPath, configuration, javaParameters, project)
+            applyForConfiguration(agentPath, disablePluginsParam, configuration, javaParameters, project)
         } else if (stateProvider.currentState.selectedRunConfigurations.contains(configuration.name ?: "")) {
-            applyForConfiguration(agentPath, configuration, javaParameters, project)
+            applyForConfiguration(agentPath, disablePluginsParam, configuration, javaParameters, project)
         }
     }
 
-    private fun applyForConfiguration(agentPath: String, configuration: RunProfile?, javaParameters: JavaParameters?, project: Project) {
+    private fun applyForConfiguration(agentPath: String, disablePluginsParam: String, configuration: RunProfile?, javaParameters: JavaParameters?, project: Project) {
         log.debug("Applying HotSwapAgent to configuration ${configuration?.name ?: ""}")
         ProjectRootManager.getInstance(project).projectSdk?.let { sdk ->
             if (DCEVMUtil.isDCEVMInstalledLikeAltJvm(sdk)) {
@@ -59,6 +60,10 @@ class HotSwapAgentPluginConfigurationPatcher : JavaProgramPatcher() {
                 HotSwapAgentPluginNotification.getInstance(project).showNotificationAboutMissingDCEVM()
             }
         }
-        javaParameters?.vmParametersList?.add("-javaagent:$agentPath")
+        javaParameters?.vmParametersList?.add("-javaagent:$agentPath$disablePluginsParam")
     }
+
+    private fun Set<String>.toDisabledPluginsParam() = if (this.isEmpty()) "" else
+        "=" + this.joinToString(",") { "disablePlugin=$it" }
+
 }

@@ -26,6 +26,7 @@ import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.ui.DocumentAdapter
+import com.intellij.util.execution.ParametersListUtil
 import java.awt.CardLayout
 import java.awt.Color
 import java.io.File
@@ -59,6 +60,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         stateProvider.currentState.agentPath = form.agentInstallPathField.text
         stateProvider.currentState.enableAgentForAllConfiguration = form.applyAgentToAllConfigurationsBox.isSelected
         stateProvider.currentState.selectedRunConfigurations = form.configurationTableProvider.getSelectedConfigurationNames()
+        stateProvider.currentState.disabledPlugins = form.disabledPluginsField.text.parse()
         showUpdateButton()
         stateChanged = false
     }
@@ -68,6 +70,15 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         return form.rootPanel
     }
 
+    override fun reset() {
+        form.agentInstallPathField.text = stateProvider.currentState.agentPath
+        form.applyAgentToAllConfigurationsBox.isSelected = stateProvider.currentState.enableAgentForAllConfiguration
+        form.disabledPluginsField.text = stateProvider.currentState.disabledPlugins.joinString()
+        stateChanged = false
+    }
+
+    override fun getHelpTopic() = null
+
     private fun setupFormComponents() {
         projectRootManager.projectSdk?.let { sdk ->
             form.dcevmVersionLabel.text = DCEVMUtil.determineDCEVMVersion(sdk) ?: DCEVM_NOT_DETERMINED
@@ -76,6 +87,11 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         form.agentInstallPathField.textField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(event: DocumentEvent?) {
                 stateChanged = form.agentInstallPathField.textField.text != stateProvider.currentState.agentPath
+            }
+        })
+        form.disabledPluginsField.document.addDocumentListener(object: DocumentAdapter(){
+            override fun textChanged(event: DocumentEvent?) {
+                stateChanged = form.disabledPluginsField.text != stateProvider.currentState.disabledPlugins.joinString()
             }
         })
         form.applyAgentToAllConfigurationsBox.addItemListener {
@@ -122,11 +138,7 @@ class HotSwapAgentPluginSettingsConfigurable(project: Project) : Configurable {
         }
     }
 
-    override fun reset() {
-        form.agentInstallPathField.text = stateProvider.currentState.agentPath
-        form.applyAgentToAllConfigurationsBox.isSelected = stateProvider.currentState.enableAgentForAllConfiguration
-        stateChanged = false
-    }
+    private fun String.parse() = ParametersListUtil.COLON_LINE_PARSER.`fun`(this).map(String::trim).toMutableSet()
 
-    override fun getHelpTopic() = null
+    private fun Set<String>.joinString() = ParametersListUtil.COLON_LINE_JOINER.`fun`(this.toList())
 }
