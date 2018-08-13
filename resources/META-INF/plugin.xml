@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.hotswap.agent.plugin</id>
     <name>HotSwapAgent</name>
-    <version>1.2.3</version>
+    <version>1.3.0</version>
     <vendor url="https://github.com/dmitry-zhuravlev/hotswap-agent-intellij-plugin">
         Dmitry Zhuravlev, Sergei Stepanov
     </vendor>
@@ -12,6 +12,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
+     <h1>1.3.0</h1>
+      <ul>
+         <li> Added ability to specify disabled plugins in settings.
+      </ul>
      <h1>1.2.3</h1>
       <ul>
          <li> Rebuild plugin with Kotlin 1.2.
