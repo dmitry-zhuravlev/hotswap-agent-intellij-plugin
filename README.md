@@ -47,7 +47,7 @@ DCEVM Installation
 ![plugin](https://cloud.githubusercontent.com/assets/1389501/24604200/29589bfa-1864-11e7-9dd3-266e08401f24.png)|
 |2. Enable HotSwapAgent plugin for all configurations (or one by one).
 ![enable](https://cloud.githubusercontent.com/assets/1389501/24604139/ed4eba0e-1863-11e7-8dd4-a6b81eb86fb9.png)|
-|3. You will see HOTSWAP AGENT notification in your console in case if setup was correctly done.
+|3. Start the application in DEBUG mode. You will see HOTSWAP AGENT notification in your console in case if setup was correctly done.
 ![notnotification](https://cloud.githubusercontent.com/assets/1389501/24604444/150f084a-1865-11e7-876b-5615c73bc989.png)|
 |4. Be sure that you have `"Reload classes after compilation: Always"` ON in IntelliJ IDEA in HotSwap section in your IDEA preferences.
 ![image](https://cloud.githubusercontent.com/assets/1389501/23870558/12ddd752-0827-11e7-9689-2015c38ebaea.png)|
