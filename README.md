@@ -51,7 +51,9 @@ DCEVM Installation
 ![notnotification](https://cloud.githubusercontent.com/assets/1389501/24604444/150f084a-1865-11e7-876b-5615c73bc989.png)|
 |4. Be sure that you have `"Reload classes after compilation: Always"` ON in IntelliJ IDEA in HotSwap section in your IDEA preferences.
 ![image](https://cloud.githubusercontent.com/assets/1389501/23870558/12ddd752-0827-11e7-9689-2015c38ebaea.png)|
-|5. To re-deploying changed classes in IDEA press keys combination (: `Command+Shift+F9`/ ⊞: `Ctrl+Shift+F9`)|
+|5. To re-deploying changed classes in IDEA press keys combination (: `Command+Shift+F9`/ ⊞: `Ctrl+Shift+F9`) to compile the current file|
+
+:information_source: Instead of compiling the classes manually you can use the [Save Action plug-in](https://github.com/dubreuia/intellij-plugin-save-actions), which can trigger the compilation automatically and thus enabling "hotswap on save".
 
 ### Happy:heart: `Hot` Swapping!
 ||  
