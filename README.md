@@ -23,7 +23,7 @@ Solution
 
 We need to use special java agent together with our JVM to enhance ability of reloading of changed classes. For example: 
 
-1. [~~JRebel~~](http://zeroturnaround.com/software/jrebel/) (too expensive [`$475`](http://zeroturnaround.com/software/jrebel/pricing/) :fearful: per year per user)
+1. [~~JRebel~~](http://zeroturnaround.com/software/jrebel/) (too expensive [`$550`](http://zeroturnaround.com/software/jrebel/pricing/) :fearful: per year per user)
 2. [~~Spring-Loaded~~](https://github.com/spring-projects/spring-loaded) (cannot work properly with java 8 and `crash JVM` :dizzy_face:)
 3. [DCEVM](https://dcevm.github.io/) (free-opensource-really`hot` :grinning:)
 
