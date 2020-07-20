@@ -24,8 +24,10 @@ Solution
 We need to use special java agent together with our JVM to enhance ability of reloading of changed classes. For example: 
 
 1. [~~JRebel~~](http://zeroturnaround.com/software/jrebel/) (too expensive [`$550`](http://zeroturnaround.com/software/jrebel/pricing/) :fearful: per year per user)
-2. [~~Spring-Loaded~~](https://github.com/spring-projects/spring-loaded) (cannot work properly with java 8 and `crash JVM` :dizzy_face:)
-3. [DCEVM](https://dcevm.github.io/) (free-opensource-really`hot` :grinning:)
+2. [~~Spring-Loaded~~](https://github.com/spring-projects/spring-loaded) (cannot work properly with java 8 and `crash JVM` :dizzy_face:, the Spring team propagates the "Restart application on file-change"-approach of [spring-boot-devtools](https://spring.io/blog/2015/06/17/devtools-in-spring-boot-1-3#automatic-restart) for Spring Boot)
+3. [~~FakeReplace~~](https://github.com/fakereplace/fakereplace) ([No JDK10+ support yet](https://github.com/fakereplace/fakereplace/issues/33))
+4. [~~RelProxy~~](https://github.com/jmarranz/relproxy/) (Dead? No support for JDK8+)
+5. [DCEVM](https://dcevm.github.io/) (free-opensource-really`hot` :grinning:)
 
 We will choose: [DCEVM + Hotswap Agent](http://www.hotswapagent.org/) :thumbsup:
 
